@@ -1,0 +1,1 @@
+Google Chrome extension that makes so that coloring a tab in Google Sheets actually colors the entire tab instead of a single line (barely visible).
