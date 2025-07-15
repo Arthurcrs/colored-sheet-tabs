@@ -1,0 +1,20 @@
+/* Hide the tiny built-in color chip — optional */
+.docs-sheet-tab-color {
+  display: none !important;
+}
+
+/* Color the entire clickable area of each sheet tab */
+.docs-sheet-tab-inner-box {
+  position: relative;
+  border-radius: 4px 4px 0 0;
+  padding: 0 4px;                 /* keep text from touching edges */
+  transition: background 0.12s;
+  background: var(--fullTabColor, transparent) !important;
+  /* the !important beats some inline styles Google sometimes injects */
+}
+
+/* Give the active tab a subtle outline so it’s distinguishable */
+.docs-sheet-active-tab .docs-sheet-tab-inner-box {
+  outline: 1px solid rgba(0,0,0,.25);
+  outline-offset: -1px;
+}
