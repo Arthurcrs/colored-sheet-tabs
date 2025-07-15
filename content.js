@@ -1,38 +1,44 @@
 (() => {
-  const TAB_SELECTOR        = '.docs-sheet-tab';
-  const INNER_SELECTOR      = '.docs-sheet-tab-inner-box';
-  const COLOR_CHIP_SELECTOR = '.docs-sheet-tab-color';
-  const TABLIST_SELECTOR    = '.docs-sheet-container-bar';  // stable parent of tabs
+  const TAB_SELECTOR     = '.docs-sheet-tab';
+  const CHIP_SELECTOR    = '.docs-sheet-tab-color';
+  const TABLIST_SELECTOR = '.docs-sheet-container-bar';
 
-  function getTabColor(tab) {
-    const chip = tab.querySelector(COLOR_CHIP_SELECTOR);
-    if (!chip) return null;
-    const bg = getComputedStyle(chip).backgroundColor;
-    // Some tabs have transparent (means "no custom color" -> fall back)
-    if (!bg || bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') return null;
-    return bg;
+  function readColour(chip) {
+    // 1) Inline style (fast, works even if element not rendered)
+    const inline = chip.style.background || chip.style.backgroundColor;
+    if (inline && !inline.includes('transparent')) return inline;
+
+    // 2) Fallback to computed style
+    const comp = getComputedStyle(chip).backgroundColor;
+    if (comp && comp !== 'rgba(0, 0, 0, 0)' && comp !== 'transparent') return comp;
+
+    return null;
   }
 
   function paintTab(tab) {
-    const inner = tab.querySelector(INNER_SELECTOR);
-    if (!inner) return;
-    const c = getTabColor(tab);
-    // If user removed color, revert to default background
-    inner.style.setProperty('--fullTabColor', c ? c : 'transparent');
+    const chip  = tab.querySelector(CHIP_SELECTOR);
+    if (!chip) return;
+
+    const colour = readColour(chip) || 'transparent';
+    tab.style.setProperty('--fullTabColor', colour);
+
+    // Now that we've read it, hide the chip so no thin bar is visible
+    chip.style.visibility = 'hidden';
   }
 
   function paintAll() {
     document.querySelectorAll(TAB_SELECTOR).forEach(paintTab);
   }
 
-  // Initial run (if elements present)
+  // Initial run
   paintAll();
 
-  // Observe: tabs can be added/renamed/color-changed dynamically
+  // Observe for tab additions / colour changes
   const parent = document.querySelector(TABLIST_SELECTOR) || document.body;
-  const mo = new MutationObserver(paintAll);
-  mo.observe(parent, { childList: true, subtree: true, attributes: true });
+  new MutationObserver(paintAll).observe(parent, {
+    childList: true, subtree: true, attributes: true
+  });
 
-  // Also listen for clicks (color changes come via menu; attributes may not fire immediately)
+  // Quick repaint after user opens colour‑picker menu
   parent.addEventListener('click', () => setTimeout(paintAll, 50), true);
 })();
