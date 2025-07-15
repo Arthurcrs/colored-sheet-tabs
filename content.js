@@ -8,7 +8,6 @@
     const inline = chip.style.background || chip.style.backgroundColor;
     if (inline && !inline.includes('transparent')) return inline;
 
-    // 2) Fallback to computed style
     const comp = getComputedStyle(chip).backgroundColor;
     if (comp && comp !== 'rgba(0, 0, 0, 0)' && comp !== 'transparent') return comp;
 
@@ -22,7 +21,6 @@
     const colour = readColour(chip) || 'transparent';
     tab.style.setProperty('--fullTabColor', colour);
 
-    // Now that we've read it, hide the chip so no thin bar is visible
     chip.style.visibility = 'hidden';
   }
 
