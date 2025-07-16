@@ -1,10 +1,9 @@
 (() => {
-  const TAB_SELECTOR     = '.docs-sheet-tab';
-  const CHIP_SELECTOR    = '.docs-sheet-tab-color';
-  const TABLIST_SELECTOR = '.docs-sheet-container-bar';
+  const TAB_SELECTOR = '.docs-sheet-tab';          // The one individual sheet tab button
+  const CHIP_SELECTOR = '.docs-sheet-tab-color';    // The tiny 3‑px colour chip inside a tab
+  const TABLIST_SELECTOR = '.docs-sheet-container-bar';// The horizontal bar that holds all tabs
 
   function readColour(chip) {
-    // 1) Inline style (fast, works even if element not rendered)
     const inline = chip.style.background || chip.style.backgroundColor;
     if (inline && !inline.includes('transparent')) return inline;
 
@@ -14,9 +13,10 @@
     return null;
   }
 
+  // Get the color of the chip, paints the tab with its color, then hides the chip
   function paintTab(tab) {
-    const chip  = tab.querySelector(CHIP_SELECTOR);
-    if (!chip) return;
+    const chip = tab.querySelector(CHIP_SELECTOR);
+    if (!chip) return; // If there is no chip, do nothing
 
     const colour = readColour(chip) || 'transparent';
     tab.style.setProperty('--fullTabColor', colour);
