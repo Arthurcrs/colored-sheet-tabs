@@ -1,7 +1,7 @@
 {
     "name": "Colored Sheet Tabs",
     "description": "Fills the whole Google Sheets tab with its colour",
-    "version": "0.1.1",
+    "version": "1.0.0",
     "manifest_version": 3,
     "permissions": [
         "scripting"
